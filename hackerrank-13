@@ -1,0 +1,70 @@
+use std::env;
+use std::fs::File;
+use std::io::{self, BufRead, Write};
+
+/*
+ * Завершіть функцію 'getTotalX' нижче.
+ *
+ * Функція повинна повертати ЦІЛЕ ЧИСЛО.
+ * Функція приймає наступні параметри:
+ *  1. МАСИВ ЦІЛИХ ЧИСЕЛ a
+ *  2. МАСИВ ЦІЛИХ ЧИСЕЛ b
+ */
+
+fn getTotalX(a: &[i32], b: &[i32]) -> i32 {
+    let mut count = 0;
+    // Перебір усіх можливих чисел від 1 до першого елемента масиву b
+    for i in 1..=b[0] {
+        let mut is_between = true;
+        // Перевіряємо, чи є число кратним усім елементам масиву a
+        for j in a {
+            if i % j != 0 {
+                is_between = false;
+                break;
+            }
+        }
+        // Якщо число кратне усім елементам a, перевіряємо, чи ділиться кожен елемент b на це число
+        if is_between {
+            for j in b {
+                if j % i != 0 {
+                    is_between = false;
+                    break;
+                }
+            }
+        }
+        // Якщо число відповідає обом умовам, збільшуємо лічильник
+        if is_between {
+            count += 1;
+        }
+    }
+    count
+}
+
+fn main() {
+    let stdin = io::stdin();
+    let mut stdin_iterator = stdin.lock().lines();
+
+    let mut fptr = File::create(env::var("OUTPUT_PATH").unwrap()).unwrap();
+
+    // Зчитуємо перший рядок вводу та отримуємо n і m
+    let first_multiple_input: Vec<String> = stdin_iterator.next().unwrap().unwrap()
+        .split(' ')
+        .map(|s| s.to_string())
+        .collect();
+
+    let n = first_multiple_input[0].trim().parse::<i32>().unwrap();
+    let m = first_multiple_input[1].trim().parse::<i32>().unwrap();
+
+    // Зчитуємо масив a
+    let arr: Vec<i32> = stdin_iterator.next().unwrap().unwrap()
+        .trim_end()
+        .split(' ')
+        .map(|s| s.to_string().parse::<i32>().unwrap())
+        .collect();
+
+    // Зчитуємо масив b
+    let brr: Vec<i32> = stdin_iterator.next().unwrap().unwrap()
+        .trim_end()
+        .split(' ')
+        .map(|s| s.to_string().parse::<i32>().unwrap())
+        .collect();
