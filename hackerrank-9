@@ -1,0 +1,55 @@
+use std::env;
+use std::fs::File;
+use std::io::{self, BufRead, Write};
+
+/*
+ * Завершіть функцію 'timeConversion' нижче.
+ *
+ * Функція повинна повертати РЯДОК.
+ * Функція приймає параметр РЯДОК s.
+ */
+
+fn timeConversion(s: &str) -> String {
+    // Отримуємо останні два символи для AM/PM
+    let period = &s[8..];
+    // Отримаємо години, хвилини та секунди
+    let time_parts: Vec<&str> = s[..8].split(':').collect();
+    let hours: i32 = time_parts[0].parse().unwrap();
+    let minutes = time_parts[1];
+    let seconds = time_parts[2];
+
+    // Визначаємо нові години у форматі 24-годин
+    let new_hours = match period {
+        "AM" => {
+            if hours == 12 { // Якщо 12 AM, то перетворюємо в 00
+                0
+            } else {
+                hours
+            }
+        }
+        "PM" => {
+            if hours == 12 { // Якщо 12 PM, залишається 12
+                12
+            } else {
+                hours + 12 // В іншому випадку додаємо 12
+            }
+        }
+        _ => hours, // У випадку помилки
+    };
+
+    // Форматування в строку у форматі 24 години
+    format!("{:02}:{:02}:{:02}", new_hours, minutes, seconds)
+}
+
+fn main() {
+    let stdin = io::stdin();
+    let mut stdin_iterator = stdin.lock().lines();
+
+    let mut fptr = File::create(env::var("OUTPUT_PATH").unwrap()).unwrap();
+
+    let s = stdin_iterator.next().unwrap().unwrap();
+
+    let result = timeConversion(&s);
+
+    writeln!(&mut fptr, "{}", result).ok();
+}
