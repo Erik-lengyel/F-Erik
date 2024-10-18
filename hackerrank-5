@@ -1,0 +1,40 @@
+# Ratios of Array Elements
+
+use std::io::{self, BufRead};
+
+/* Виконайте функцію 'plusMinus' нижче.
+ *
+ * Функція приймає масив цілих чисел arr як параметр.
+ */
+
+fn plusMinus(arr: &[i32]) {
+    let total = arr.len() as f64;
+    let (positive, negative, zero) = arr.iter().fold((0, 0, 0), |(pos, neg, zer), &x| {
+        if x > 0 {
+            (pos + 1, neg, zer)
+        } else if x < 0 {
+            (pos, neg + 1, zer)
+        } else {
+            (pos, neg, zer + 1)
+        }
+    });
+
+    println!("{:.6}", positive as f64 / total);
+    println!("{:.6}", negative as f64 / total);
+    println!("{:.6}", zero as f64 / total);
+}
+
+fn main() {
+    let stdin = io::stdin();
+    let mut stdin_iterator = stdin.lock().lines();
+
+    let n = stdin_iterator.next().unwrap().unwrap().trim().parse::<i32>().unwrap();
+
+    let arr: Vec<i32> = stdin_iterator.next().unwrap().unwrap()
+        .trim_end()
+        .split(' ')
+        .map(|s| s.to_string().parse::<i32>().unwrap())
+        .collect();
+
+    plusMinus(&arr);
+}
