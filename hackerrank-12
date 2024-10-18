@@ -1,0 +1,65 @@
+use std::env;
+use std::fs::File;
+use std::io::{self, BufRead, Write};
+
+/*
+ * Завершіть функцію 'kangaroo' нижче.
+ *
+ * Функція повинна повертати РЯДОК (STRING).
+ * Функція приймає наступні параметри:
+ *  1. Ціле число x1 - стартова позиція першого кенгуру.
+ *  2. Ціле число v1 - швидкість першого кенгуру.
+ *  3. Ціле число x2 - стартова позиція другого кенгуру.
+ *  4. Ціле число v2 - швидкість другого кенгуру.
+ */
+
+fn kangaroo(x1: i32, v1: i32, x2: i32, v2: i32) -> String {
+    // Якщо швидкості кенгуру рівні
+    if v1 == v2 {
+        // Якщо стартові позиції теж рівні, вони зустрінуться
+        if x1 == x2 {
+            return "YES".to_string();
+        } else {
+            // Якщо стартові позиції різні, вони не зустрінуться
+            return "NO".to_string();
+        }
+    }
+    
+    // Визначаємо, який кенгуру починає з меншої позиції
+    let (start1, speed1, start2, speed2) = if x1 < x2 {
+        (x1, v1, x2, v2)
+    } else {
+        (x2, v2, x1, v1)
+    };
+
+    // Якщо різниця в позиціях ділиться на різницю швидкостей без залишку і результат невід'ємний
+    if (start2 - start1) % (speed1 - speed2) == 0 && (start2 - start1) / (speed1 - speed2) >= 0 {
+        "YES".to_string() // Кенгуру зустрінуться
+    } else {
+        "NO".to_string() // Кенгуру не зустрінуться
+    }
+}
+
+fn main() {
+    let stdin = io::stdin();
+    let mut stdin_iterator = stdin.lock().lines();
+
+    let mut fptr = File::create(env::var("OUTPUT_PATH").unwrap()).unwrap();
+
+    // Зчитуємо вхідні дані
+    let first_multiple_input: Vec<String> = stdin_iterator.next().unwrap().unwrap()
+        .split(' ')
+        .map(|s| s.to_string())
+        .collect();
+
+    let x1 = first_multiple_input[0].trim().parse::<i32>().unwrap();
+    let v1 = first_multiple_input[1].trim().parse::<i32>().unwrap();
+    let x2 = first_multiple_input[2].trim().parse::<i32>().unwrap();
+    let v2 = first_multiple_input[3].trim().parse::<i32>().unwrap();
+
+    // Викликаємо функцію kangaroo
+    let result = kangaroo(x1, v1, x2, v2);
+
+    // Записуємо результат у файл
+    writeln!(&mut fptr, "{}", result).ok();
+}
