@@ -1,0 +1,59 @@
+use std::env;
+use std::fs::File;
+use std::io::{self, BufRead, Write};
+
+/*
+ * Завершіть функцію 'birthday' нижче.
+ *
+ * Функція повинна повертати ЦІЛЕ ЧИСЛО.
+ * Функція приймає наступні параметри:
+ *  1. МАСИВ ЦІЛИХ ЧИСЕЛ s
+ *  2. ЦІЛЕ ЧИСЛО d (сумарна кількість очок)
+ *  3. ЦІЛЕ ЧИСЛО m (кількість місяців, тобто довжина сегмента)
+ */
+
+fn birthday(s: &[i32], d: i32, m: i32) -> i32 {
+    let mut count = 0;   // Лічильник відповідних сегментів
+    let n = s.len();     // Довжина масиву шоколадки
+
+    // Проходимо по всіх можливих сегментах довжини m
+    for i in 0..=n - m as usize {
+        let sum: i32 = s[i..i + m as usize].iter().sum(); // Обчислюємо суму сегмента
+        if sum == d { // Якщо сума дорівнює d, збільшуємо лічильник
+            count += 1;
+        }
+    }
+
+    count // Повертаємо кількість відповідних сегментів
+}
+
+fn main() {
+    let stdin = io::stdin();
+    let mut stdin_iterator = stdin.lock().lines();
+
+    // Читання розміру масиву
+    let n = stdin_iterator.next().unwrap().unwrap().trim().parse::<i32>().unwrap();
+
+    // Читання масиву чисел (шоколадки)
+    let s: Vec<i32> = stdin_iterator.next().unwrap().unwrap()
+        .trim_end()
+        .split(' ')
+        .map(|s| s.to_string().parse::<i32>().unwrap())
+        .collect();
+
+    // Читання значень d (кількість очок) та m (довжина сегменту)
+    let first_multiple_input: Vec<String> = stdin_iterator.next().unwrap().unwrap()
+        .split(' ')
+        .map(|s| s.to_string())
+        .collect();
+
+    let d = first_multiple_input[0].trim().parse::<i32>().unwrap();
+    let m = first_multiple_input[1].trim().parse::<i32>().unwrap();
+
+    // Виклик функції для підрахунку кількості способів
+    let result = birthday(&s, d, m);
+
+    // Виведення результату
+    let mut fptr = File::create(env::var("OUTPUT_PATH").unwrap()).unwrap();
+    writeln!(&mut fptr, "{}", result).ok();
+}
