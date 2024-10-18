@@ -1,0 +1,30 @@
+use std::io::{self, BufRead};
+
+/*
+ * Виконайте функцію 'staircase' нижче.
+ *
+ * Функція приймає ціле число n як параметр.
+ */
+
+fn staircase(n: i32) {
+    for i in 1..=n {
+        // Обчислюємо кількість пробілів та символів #
+        let spaces = n - i;
+        let hashes = i;
+
+        // Створюємо рядок з пробілів, після яких йдуть символи #
+        let line = " ".repeat(spaces as usize) + &"#".repeat(hashes as usize);
+        
+        // Друкуємо рядок
+        println!("{}", line);
+    }
+}
+
+fn main() {
+    let stdin = io::stdin();
+    let mut stdin_iterator = stdin.lock().lines();
+
+    let n = stdin_iterator.next().unwrap().unwrap().trim().parse::<i32>().unwrap();
+
+    staircase(n);
+}
