@@ -1,0 +1,36 @@
+use std::io::{self, BufRead};
+
+/*
+ * Виконайте функцію 'miniMaxSum' нижче.
+ *
+ * Функція приймає масив цілих чисел arr як параметр.
+ */
+
+fn miniMaxSum(arr: &[i32]) {
+    // Обчислюємо загальну суму елементів масиву
+    let total_sum: i32 = arr.iter().sum();
+    
+    // Знаходимо мінімальне та максимальне значення в масиві
+    let min_value = *arr.iter().min().unwrap();
+    let max_value = *arr.iter().max().unwrap();
+    
+    // Обчислюємо мінімальну та максимальну суми
+    let min_sum = total_sum - max_value;
+    let max_sum = total_sum - min_value;
+    
+    // Виводимо результати
+    println!("{} {}", min_sum, max_sum);
+}
+
+fn main() {
+    let stdin = io::stdin();
+    let mut stdin_iterator = stdin.lock().lines();
+
+    let arr: Vec<i32> = stdin_iterator.next().unwrap().unwrap()
+        .trim_end()
+        .split(' ')
+        .map(|s| s.parse::<i32>().unwrap())
+        .collect();
+
+    miniMaxSum(&arr);
+}
