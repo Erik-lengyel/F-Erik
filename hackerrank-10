@@ -1,0 +1,56 @@
+use std::env;
+use std::fs::File;
+use std::io::{self, BufRead, Write};
+
+/*
+ * Завершіть функцію 'gradingStudents' нижче.
+ * Функція повинна повертати ВЕКТОР ЦІЛИХ ЧИСЕЛ. Університет HackerLand має таку політику оцінювання:
+
+Кожен студент отримує оцінку в межах від 0 до 100 включно.
+Будь-яка оцінка менше 40 є незадовільною.
+
+Якщо оцінка менше 38, округлення не відбувається, оскільки результат все ще буде незадовільним.
+
+
+fn gradingStudents(grades: &[i32]) -> Vec<i32> {
+    grades.iter().map(|&grade| {
+        if grade < 38 {
+            grade // Не округлюємо
+        } else {
+            let next_multiple_of_5 = ((grade / 5) + 1) * 5;
+            if next_multiple_of_5 - grade < 3 {
+                next_multiple_of_5 // Округляємо
+            } else {
+                grade // Не округлюємо
+            }
+        }
+    }).collect() // Збираємо результат у вектор
+}
+
+fn main() {
+    let stdin = io::stdin();
+    let mut stdin_iterator = stdin.lock().lines();
+
+    let mut fptr = File::create(env::var("OUTPUT_PATH").unwrap()).unwrap();
+
+    let grades_count = stdin_iterator.next().unwrap().unwrap().trim().parse::<i32>().unwrap();
+
+    let mut grades: Vec<i32> = Vec::with_capacity(grades_count as usize);
+
+    for _ in 0..grades_count {
+        let grades_item = stdin_iterator.next().unwrap().unwrap().trim().parse::<i32>().unwrap();
+        grades.push(grades_item);
+    }
+
+    let result = gradingStudents(&grades);
+
+    for i in 0..result.len() {
+        write!(&mut fptr, "{}", result[i]).ok();
+
+        if i != result.len() - 1 {
+            writeln!(&mut fptr).ok();
+        }
+    }
+
+    writeln!(&mut fptr).ok();
+}
