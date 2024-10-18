@@ -1,0 +1,34 @@
+use std::env;
+use std::fs::File;
+use std::io::{self, BufRead, Write};
+
+/*
+ * Завершіть функцію 'birthdayCakeCandles' нижче.
+ *
+ * Функція повинна повертати ЦІЛЕ ЧИСЛО.
+ * Функція приймає параметр INTEGER_ARRAY candles.
+ */
+
+fn birthdayCakeCandles(candles: &[i32]) -> i32 {
+    let max_height = *candles.iter().max().unwrap(); // Знаходимо максимальну висоту свічки
+    candles.iter().filter(|&&candle| candle == max_height).count() as i32 // Рахуємо кількість свічок з максимальною висотою
+}
+
+fn main() {
+    let stdin = io::stdin();
+    let mut stdin_iterator = stdin.lock().lines();
+
+    let mut fptr = File::create(env::var("OUTPUT_PATH").unwrap()).unwrap();
+
+    let _candles_count = stdin_iterator.next().unwrap().unwrap().trim().parse::<i32>().unwrap(); // Зчитуємо кількість свічок
+
+    let candles: Vec<i32> = stdin_iterator.next().unwrap().unwrap()
+        .trim_end()
+        .split(' ')
+        .map(|s| s.to_string().parse::<i32>().unwrap())
+        .collect(); // Зчитуємо висоту свічок
+
+    let result = birthdayCakeCandles(&candles); // Викликаємо функцію
+
+    writeln!(&mut fptr, "{}", result).ok(); // Записуємо результат у файл
+}
