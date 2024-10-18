@@ -1,0 +1,39 @@
+use std::env;
+use std::fs::File;
+use std::io::{self, BufRead, Write};
+
+/*
+ * Функція для обчислення різниці між діагоналями.
+ * Приймає 2D масив цілих чисел.
+ */
+fn diagonalDifference(arr: &[Vec<i32>]) -> i32 {
+    let n = arr.len();
+    let (mut left_to_right, mut right_to_left) = (0, 0);
+
+    for i in 0..n {
+        left_to_right += arr[i][i];
+        right_to_left += arr[i][n - 1 - i];
+    }
+
+    (left_to_right - right_to_left).abs()
+}
+
+fn main() {
+    let stdin = io::stdin();
+    let stdin_iterator = stdin.lock().lines();
+
+    let mut fptr = File::create(env::var("OUTPUT_PATH").unwrap()).unwrap();
+
+    let mut lines = stdin_iterator.map(|l| l.unwrap()); // Зчитуємо всі рядки
+
+    let n = lines.next().unwrap().trim().parse::<usize>().unwrap(); // Отримуємо розмір матриці
+
+    let arr: Vec<Vec<i32>> = (0..n)
+        .map(|_| lines.next().unwrap().split_whitespace().map(|s| s.parse().unwrap()).collect())
+        .collect(); // Зчитуємо саму матрицю
+
+    let result = diagonalDifference(&arr); // Обчислюємо різницю між діагоналями
+
+    writeln!(fptr, "{}", result).unwrap(); // Записуємо результат у файл
+}
+
