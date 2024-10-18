@@ -1,0 +1,43 @@
+use std::io;
+
+fn compare_triplets(a: Vec<i32>, b: Vec<i32>) -> Vec<i32> {
+    let mut alice_score = 0; // Лічильник для балів Аліси
+    let mut bob_score = 0;   // Лічильник для балів Боба
+    
+    for i in 0..3 {
+        if a[i] > b[i] {
+            alice_score += 1; // Аліса отримує бал
+        } else if a[i] < b[i] {
+            bob_score += 1;   // Боб отримує бал
+        }
+        // Якщо a[i] == b[i], нічого не робимо
+    }
+
+    vec![alice_score, bob_score] // Повертаємо результати
+}
+
+fn main() {
+    let mut a_input = String::new();
+    let mut b_input = String::new();
+
+    // Зчитування оцінок Аліси
+    io::stdin().read_line(&mut a_input).expect("Failed to read line");
+    let a: Vec<i32> = a_input
+        .trim()
+        .split_whitespace()
+        .map(|s| s.parse().unwrap())
+        .collect();
+
+    // Зчитування оцінок Боба
+    io::stdin().read_line(&mut b_input).expect("Failed to read line");
+    let b: Vec<i32> = b_input
+        .trim()
+        .split_whitespace()
+        .map(|s| s.parse().unwrap())
+        .collect();
+
+    let result = compare_triplets(a, b); // Обчислюємо результати
+
+    // Виводимо результати
+    println!("{} {}", result[0], result[1]);
+}
